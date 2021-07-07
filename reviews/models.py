@@ -1,5 +1,6 @@
-from django.db import models
-from timestamp import TimeStampModel
+from django.db   import models
+
+from core.models import TimeStampModel
 
 class Review(TimeStampModel): 
     user       = models.ForeignKey('users.User', on_delete=models.CASCADE)

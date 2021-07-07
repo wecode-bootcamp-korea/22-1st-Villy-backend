@@ -1,5 +1,6 @@
-from django.db import models
-from timestamp import TimeStampModel
+from django.db   import models
+
+from core.models import TimeStampModel
 
 class Product(TimeStampModel): 
     name                = models.CharField(max_length=50)
@@ -21,9 +22,9 @@ class ProductIcon(models.Model):
         db_table = 'product_icons'
 
 
-class ProductSubtitle(models.Model):
+class ProductSummary(models.Model):
     product   = models.ForeignKey('Product', on_delete=models.CASCADE)
-    sub_title = models.CharField(max_length=50)
+    summary   = models.CharField(max_length=50)
 
     class Meta: 
-        db_table = 'product_subtitles'
+        db_table = 'product_summaries'
