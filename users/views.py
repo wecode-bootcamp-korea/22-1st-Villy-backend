@@ -5,8 +5,8 @@ import jwt
 from django.http  import JsonResponse
 from django.views import View
 
-from my_settings import SECRET_KEY, ALGORITHM
-from users.models import User
+from my_settings      import SECRET_KEY, ALGORITHM
+from users.models     import User
 from users.validation import validate_name, validate_email, validate_password, validate_mobile
 
 class SignupView(View):
@@ -33,15 +33,15 @@ class SignupView(View):
                 return JsonResponse({'message': 'ALREADY_EXISTED_NUMBER'})                
 
             encoded_password = data['password'].encode('utf-8')
-            hashed_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
+            hashed_password  = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
 
             user = User.objects.create(
-                name=data['name'],
-                email=data['email'],
-                password=hashed_password.decode('utf-8'),
-                mobile=data['mobile'],
+                name     = data['name'],
+                email    = data['email'],
+                password = hashed_password.decode('utf-8'),
+                mobile   = data['mobile'],
             )
-            access_token = jwt.encode({'id': user.id}, SECRET_KEY, SECRET_ALGORITHM)
+            access_token = jwt.encode({'id': user.id}, SECRET_KEY, ALGORITHM)
 
             return JsonResponse({'message': 'SUCCESS', 'access_token': access_token}, status=201)
 
