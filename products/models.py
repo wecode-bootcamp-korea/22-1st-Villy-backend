@@ -13,13 +13,13 @@ class Product(TimeStampModel):
         db_table = 'products'
 
 
-class ProductIcon(models.Model):
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
-    icon    = models.URLField()
-    name    = models.CharField(max_length=10)
+class ProductEfficacy(models.Model):
+    product  = models.ForeignKey('Product', on_delete=models.CASCADE)
+    icon_url = models.URLField()
+    name     = models.CharField(max_length=10)
 
     class Meta:
-        db_table = 'product_icons'
+        db_table = 'product_efficacies'
 
 
 class ProductSummary(models.Model):
