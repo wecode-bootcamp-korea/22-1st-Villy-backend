@@ -12,11 +12,16 @@ class Product(TimeStampModel):
     class Meta: 
         db_table = 'products'
 
+class Efficacy(TimeStampModel):
+    name     = models.CharField(max_length=10)
+    icon_url = models.URLField()
+
+    class Meta:
+        db_table = 'efficacies'
 
 class ProductEfficacy(models.Model):
     product  = models.ForeignKey('Product', on_delete=models.CASCADE)
-    icon_url = models.URLField()
-    name     = models.CharField(max_length=10)
+    Efficacy = models.ForeignKey('Efficacy', on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_efficacies'
