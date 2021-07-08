@@ -13,7 +13,7 @@ class OrderListStatus(models.Model):
     status = models.CharField(max_length=100)
 
     class Meta: 
-        db_table = 'order_statuses'
+        db_table = 'order_list_statuses'
 
 
 class Shipment(models.Model): 
