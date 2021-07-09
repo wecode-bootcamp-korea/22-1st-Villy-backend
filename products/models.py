@@ -10,6 +10,7 @@ class Product(TimeStampModel):
     thumbnail_image_url = models.URLField()
     efficacy            = models.ManyToManyField("Efficacy", through="ProductEfficacy")
 
+
     class Meta: 
         db_table = 'products'
 
