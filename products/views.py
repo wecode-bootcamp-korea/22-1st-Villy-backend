@@ -10,11 +10,10 @@ from .models        import Product, Efficacy, ProductEfficacy, ProductSummary
 class ProductsView(View):
     def get(self, request):
         try:          
-            efficacy = request.GET.get('efficacy',None)
+            efficacy = request.GET.getlist('efficacy',None)
             q_object = Q()
             if efficacy:
-                efficacy_list = efficacy.split(',')
-                for i in efficacy_list:                    
+                for i in efficacy:                    
                     q_object.add(Q(Q(efficacy__id=i)),Q.OR)
 
             products = Product.objects.filter(q_object).distinct()
