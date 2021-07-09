@@ -22,7 +22,7 @@ class Efficacy(TimeStampModel):
 
 class ProductEfficacy(models.Model):
     product  = models.ForeignKey('Product', on_delete=models.CASCADE)
-    Efficacy = models.ForeignKey('Efficacy', on_delete=models.CASCADE, null=True)
+    efficacy = models.ForeignKey('Efficacy', on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'product_efficacies'

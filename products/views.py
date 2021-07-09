@@ -14,14 +14,27 @@ class ProductsView(View):
             q_object = Q()
             if efficacy:
                 for i in efficacy:                    
-                    q_object.add(Q(Q(efficacy__id=i)),Q.OR)
+                    q_object.add(Q(efficacy__id=i),Q.OR)
 
             products = Product.objects.filter(q_object).distinct()
 
-            results = [
-                {
-                    "products" : [
-                        {
+            # results = [
+            #     {
+            #         "products" : [
+            #             {
+            #                 "productID"          : product.id,
+            #                 "productName"        : product.name,
+            #                 "productPrice"       : product.price,
+            #                 "productTablet"      : product.tablet,
+            #                 "thumbnail_image_url": product.thumbnail_image_url,
+            #                 "icon_image_url"     : [product_icon.icon_url for product_icon in product.efficacy.all()],
+            #                 "summary"          : [text.summary for text in product.productsummary_set.all()]
+            #             }for product in products
+            #         ] 
+            #     }
+            # ]
+
+            results = [{
                             "productID"          : product.id,
                             "productName"        : product.name,
                             "productPrice"       : product.price,
@@ -29,10 +42,7 @@ class ProductsView(View):
                             "thumbnail_image_url": product.thumbnail_image_url,
                             "icon_image_url"     : [product_icon.icon_url for product_icon in product.efficacy.all()],
                             "summary"          : [text.summary for text in product.productsummary_set.all()]
-                        }for product in products
-                    ] 
-                }
-            ]
+                            }for product in products]
             return JsonResponse({"message":results},status=200)
 
         except TypeError:
