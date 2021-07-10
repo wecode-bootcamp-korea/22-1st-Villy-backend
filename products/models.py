@@ -8,6 +8,8 @@ class Product(TimeStampModel):
     price               = models.DecimalField(max_digits=10, decimal_places=2)
     tablet              = models.IntegerField()
     thumbnail_image_url = models.URLField()
+    efficacy            = models.ManyToManyField("Efficacy", through="ProductEfficacy")
+
 
     class Meta: 
         db_table = 'products'
@@ -21,7 +23,7 @@ class Efficacy(TimeStampModel):
 
 class ProductEfficacy(models.Model):
     product  = models.ForeignKey('Product', on_delete=models.CASCADE)
-    Efficacy = models.ForeignKey('Efficacy', on_delete=models.CASCADE)
+    efficacy = models.ForeignKey('Efficacy', on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'product_efficacies'
