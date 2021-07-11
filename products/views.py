@@ -24,7 +24,7 @@ class ProductsView(View):
                             "productTablet"      : product.tablet,
                             "thumbnail_image_url": product.thumbnail_image_url,
                             "icon_image_url"     : [product_icon.icon_url for product_icon in product.efficacy.all()],
-                            "summary"          : [text.summary for text in product.productsummary_set.all()]
+                            "summary"            : [text.summary for text in product.productsummary_set.all()]
                             }for product in products]
             return JsonResponse({"message":results},status=200)
 
