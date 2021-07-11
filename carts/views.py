@@ -21,9 +21,13 @@ class CartView(View):
         try: 
             data    = json.loads(request.body)
             user    = request.user
+            
             product = Product.objects.get(id=data['productID'])
+            
+            if Cart.objects.filter(product_id=product.id).exists():
+                return JsonResponse({'message': 'ALREADY_IN_CART'})
 
-            Cart.objects.create(user_id=user.id, product_id=product.id)
+            Cart.objects.create(user=user, product=product)
 
             return JsonResponse({'message' : 'SUCCESS'}, status=200)
         except KeyError:
@@ -37,6 +41,7 @@ class CartView(View):
             user  = request.user
             carts = Cart.objects.filter(user_id=user.id)
             results = [{
+                "productID"          : cart.product.id,
                 "productName"        : cart.product.name,
                 "quantity"           : cart.quantity, 
                 "productPrice"       : int(cart.product.price),
@@ -57,7 +62,7 @@ class CartView(View):
             user    = request.user
             product = Product.objects.get(id=data["productID"])
             
-            Cart.objects.filter(product_id=product, user_id=user).update(quantity = data["quantity"])
+            Cart.objects.filter(product=product.id, user=user.id).update(quantity = data["quantity"])
 
             return JsonResponse({"message":"UPDATE_COMPLETED"},status=200)
 

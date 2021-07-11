@@ -37,7 +37,7 @@ class OrderItem(TimeStampModel):
     order             = models.ForeignKey('Order', on_delete=models.CASCADE)
     product           = models.ForeignKey('products.Product', on_delete=models.CASCADE)
     quantity          = models.PositiveIntegerField(default=1)
-    shipment          = models.OneToOneField('Shipment', on_delete=models.CASCADE)
+    shipment          = models.ForeignKey('Shipment', on_delete=models.CASCADE)
     order_list_status = models.ForeignKey('OrderListStatus', on_delete=models.CASCADE)
 
     class Meta: 
