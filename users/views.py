@@ -6,7 +6,7 @@ from django.http  import JsonResponse
 from django.views import View
 
 from my_settings      import SECRET_KEY, ALGORITHM
-from users.models     import User
+from users.models     import User, Point
 from users.validation import validate_name, validate_email, validate_password, validate_mobile
 
 class SignupView(View):
@@ -41,6 +41,12 @@ class SignupView(View):
                 password = hashed_password.decode('utf-8'),
                 mobile   = data['mobile'],
             )
+
+            Point.objects.create(
+                user = User.objects.get(email=data['email']),
+                point = 1000000
+            )
+
             access_token = jwt.encode({'id': user.id}, SECRET_KEY, ALGORITHM)
 
             return JsonResponse({'message': 'SUCCESS', 'access_token': access_token}, status=201)
