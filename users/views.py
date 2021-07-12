@@ -49,7 +49,7 @@ class SignupView(View):
             return JsonResponse({'message': 'KEY_ERROR'}, status=400)
 
 
-class SignInView(View):
+class SigninView(View):
     def post(self, request):
 
         try:
