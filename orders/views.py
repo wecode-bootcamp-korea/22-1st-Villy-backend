@@ -20,10 +20,17 @@ class OrderView(View):
     @check_login
     def post(self, request):
         try: 
-            data    = json.loads(request.body)
-            user    = request.user
-            point   = user.point_set.get(id=1).point
-            total_price = data['price']
+            data         = json.loads(request.body)
+            user         = request.user
+            point        = user.point_set.get(id=1).point
+
+            product_dict = data['products']
+            id_quantity  = {value["product_id"]:value["quantity"] for (key,value) in product_dict.items()}
+            total_price  = 0
+            
+            for product_id, quantity in id_quantity.items():
+                product_price  = Product.objects.get(id=product_id).price
+                total_price += int(quantity)*int(product_price)
 
             if int(point) >= int(total_price):
                 updated_point = int(point) - int(total_price)
@@ -42,9 +49,6 @@ class OrderView(View):
                     order = order,
                     point = int(total_price)
                 )
-
-                product_dict = data['products']
-                id_quantity = {value["product_id"]:value["quantity"] for (key,value) in product_dict.items()}
                 
                 for product_id, quantity in id_quantity.items():
                     OrderItem.objects.create(
