@@ -30,7 +30,7 @@ class OrderView(View):
             
             for product_id, quantity in id_quantity.items():
                 product_price  = Product.objects.get(id=product_id).price
-                total_price += int(quantity)*int(product_price)
+                total_price   += int(quantity)*int(product_price)
 
             if int(point) >= int(total_price):
                 updated_point = int(point) - int(total_price)
@@ -38,9 +38,9 @@ class OrderView(View):
                 
                 new_uuid = uuid.uuid4()
                 Order.objects.create(
-                    user_id=user.id, 
-                    order_status_id=Order.objects.get(id=1).id, 
-                    order_number=new_uuid
+                    user_id         = user.id,
+                    order_status_id = Order.objects.get(id=1).id,
+                    order_number    = new_uuid
                     )          
                 
                 order = Order.objects.get(order_number=new_uuid)
@@ -52,19 +52,16 @@ class OrderView(View):
                 
                 for product_id, quantity in id_quantity.items():
                     OrderItem.objects.create(
-                        order_id=order.id,
-                        product_id=Product.objects.get(id=product_id).id, 
-                        quantity=quantity,
-                        shipment_id=Shipment.objects.get(id=1).id,
-                        order_list_status_id=OrderListStatus.objects.get(id=1).id
+                        order_id             = order.id,
+                        product_id           = Product.objects.get(id=product_id).id,
+                        quantity             = quantity,
+                        shipment_id          = Shipment.objects.get(id=1).id,
+                        order_list_status_id = OrderListStatus.objects.get(id=1).id
                     )
-
                     Cart.objects.filter(user_id=user.id, product_id=product_id).delete()
 
                 return JsonResponse({'message' : 'SUCCESS'}, status=200)
-
             return JsonResponse({'message' : 'NOT_ENOUGH_POINTS'}, status=401)
-
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
         except ValueError:
