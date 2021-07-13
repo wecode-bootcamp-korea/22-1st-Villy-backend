@@ -3,9 +3,11 @@ import bcrypt
 import jwt
 from datetime          import datetime
 
-from django.http       import JsonResponse
-from django.views      import View
-from django.db.models  import Q
+from django.http            import JsonResponse
+from django.views           import View
+from django.db.models       import Q
+from django.core.exceptions import ObjectDoesNotExist
+
 
 from core.models       import TimeStampModel
 from core.views        import check_login
