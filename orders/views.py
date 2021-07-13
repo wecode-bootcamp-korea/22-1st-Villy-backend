@@ -24,8 +24,8 @@ class OrderView(View):
             user         = request.user
             point        = user.point_set.get(id=1).point
 
-            product_dict = data['products']
-            id_quantity  = {value["product_id"]:value["quantity"] for (key,value) in product_dict.items()}
+            all_product_list = data['products']
+            id_quantity  = {value["product_id"]:value["quantity"] for (key,value) in all_product_list.items()}
             total_price  = 0
             
             for product_id, quantity in id_quantity.items():
@@ -34,7 +34,7 @@ class OrderView(View):
 
             if int(point) >= int(total_price):
                 updated_point = int(point) - int(total_price)
-                user.point_set.filter(id=1).update(point= updated_point) 
+                user.point_set.filter(user=user).update(point= updated_point) 
                 
                 new_uuid = uuid.uuid4()
                 Order.objects.create(
