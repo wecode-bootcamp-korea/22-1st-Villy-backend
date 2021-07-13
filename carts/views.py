@@ -66,17 +66,12 @@ class CartView(View):
     @check_login
     def patch(self, request):
         try: 
-            data       = json.loads(request.body)
-            user       = request.user
-            product_id = data["productID"]
-            product    = Product.objects.get(id=product_id)
-            cart       = Cart.objects.filter(product_id=product, user_id=user)
-
-            if cart.exists():
-                cart.update(quantity = data["quantity"])
-                return JsonResponse({"message":"UPDATE_COMPLETED"},status=200) 
-            return JsonResponse({"message":f'{product_id}_IS_NOT_FOUND'},status=400)
-
+            data = json.loads(request.body)
+            user = request.user
+            cart = Cart.objects.get(product_id=data["productID"], user=user)
+            cart.update(quantity = data["quantity"])
+            return JsonResponse({"message":"UPDATE_COMPLETED"},status=200) 
+            
         except ObjectDoesNotExist:
             return JsonResponse({'message' : 'MODEL_ERROR'}, status=400)
         except KeyError: 
@@ -90,14 +85,10 @@ class CartDeleteView(View):
     @check_login
     def delete(self, request, product_id):
         try: 
-            user    = request.user
-            product = Product.objects.get(id=product_id)
-            cart    = Cart.objects.get(product=product, user=user)
-
-            if cart: 
-                cart.delete()
-                return JsonResponse({"message":"DELETE_COMPLETED"},status=204) 
-            return JsonResponse({"message":f'{product}_IS_NOT_FOUND'},status=400)
+            user = request.user
+            cart = Cart.objects.get(product_id=product_id, user=user)
+            cart.delete()
+            return JsonResponse({"message":"DELETE_COMPLETED"},status=204) 
 
         except ObjectDoesNotExist:
             return JsonResponse({'message' : 'MODEL_ERROR'}, status=400)
