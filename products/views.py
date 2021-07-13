@@ -14,7 +14,7 @@ class ProductsView(View):
             q_object = Q()
             if efficacy:
                 q_object &= Q(efficacy__id__in = efficacy)
-             
+            
             products = Product.objects.filter(q_object).distinct()
 
             results = [{
@@ -24,7 +24,7 @@ class ProductsView(View):
                             "productTablet"      : product.tablet,
                             "thumbnail_image_url": product.thumbnail_image_url,
                             "icon_image_url"     : [product_icon.icon_url for product_icon in product.efficacy.all()],
-                            "summary"          : [text.summary for text in product.productsummary_set.all()]
+                            "summary"            : [text.summary for text in product.productsummary_set.all()]
                             }for product in products]
             return JsonResponse({"message":results},status=200)
 
@@ -38,8 +38,7 @@ class ProductsDetailsView(View):
     def get(self, request, product_id):
         try:
             product = Product.objects.get(id=product_id)
-            results = [
-                {
+            results = [{
                     "productName"        : product.name,
                     "productPrice"       : product.price,
                     "productTablet"      : product.tablet,
