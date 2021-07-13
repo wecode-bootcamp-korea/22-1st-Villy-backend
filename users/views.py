@@ -42,7 +42,7 @@ class SignupView(View):
                 mobile   = data['mobile'],
             )
             
-            Point.objects.create(user, point = 1000000)
+            Point.objects.create(user=user, point=1000000)
 
             access_token = jwt.encode({'id': user.id}, SECRET_KEY, ALGORITHM)
 
