@@ -3,9 +3,11 @@ import bcrypt
 import jwt
 from datetime          import datetime
 
-from django.http       import JsonResponse
-from django.views      import View
-from django.db.models  import Q
+from django.http            import JsonResponse
+from django.views           import View
+from django.db.models       import Q
+from django.core.exceptions import ObjectDoesNotExist
+
 
 from core.models       import TimeStampModel
 from core.views        import check_login
@@ -18,12 +20,12 @@ class CartView(View):
     @check_login
     def post(self, request):
         try:             
-                        data        = json.loads(request.body)
-                        user        = request.user
-                        product     = Product.objects.get(id=data['productID'])
+            data                    = json.loads(request.body)
+            user                    = request.user
+            product                 = Product.objects.get(id=data['productID'])
             cart_object, cart_exist = Cart.objects.get_or_create(user_id=user.id, product_id=product.id)
 
-            if cart_exist:
+            if not cart_exist:
                 return JsonResponse({"message":f'{product.id}_IS_ALREADY_EXISTS'},status=400)
             return JsonResponse({'message' : 'SUCCESS'}, status=200)
             
