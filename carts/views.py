@@ -81,8 +81,9 @@ class CartView(View):
         except TypeError:
             return JsonResponse({"message":"TYPE_ERROR"},status=400)
 
+class CartDeleteView(View):
     @check_login
-    def delete(self, request):
+    def delete(self, request, product_id):
         try: 
             item = request.GET.getlist('item',None)
             q_object = Q()
