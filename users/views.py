@@ -43,9 +43,7 @@ class SignupView(View):
             )
             
             Point.objects.create(user=user, point=1000000)
-
             access_token = jwt.encode({'id': user.id}, SECRET_KEY, ALGORITHM)
-
             return JsonResponse({'message': 'SUCCESS', 'access_token': access_token}, status=201)
 
         except KeyError:

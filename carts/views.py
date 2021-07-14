@@ -85,6 +85,28 @@ class CartDeleteView(View):
     @check_login
     def delete(self, request, product_id):
         try: 
+            item = request.GET.getlist('item',None)
+            q_object = Q()
+            if item: 
+                q_object &= Q(product_id__in= item)
+            
+            Cart.objects.filter(q_object).delete()
+
+            return JsonResponse({"message":"DELETE_COMPLETED"},status=204)
+        except KeyError: 
+            return JsonResponse({"message":"KEY_ERROR"},status=400)
+        except ObjectDoesNotExist:
+            return JsonResponse({'message' : 'MODEL_ERROR'}, status=400)
+        except TypeError:
+            return JsonResponse({"message":"TYPE_ERROR"},status=400)
+        except ValueError:
+            return JsonResponse({"message":"VALUE_ERROR"},status=400)
+
+
+class CartDeleteView(View):
+    @check_login
+    def delete(self, request, product_id):
+        try: 
             user = request.user
             cart = Cart.objects.get(product_id=product_id, user=user)
             cart.delete()

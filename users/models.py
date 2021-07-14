@@ -21,7 +21,7 @@ class Point(TimeStampModel):
 
 
 class PointHistory(TimeStampModel):
-    point = models.ForeignKey('Point', on_delete=models.CASCADE)
+    point = models.IntegerField()
     order = models.ForeignKey('orders.Order', on_delete=models.CASCADE)
 
     class Meta:
