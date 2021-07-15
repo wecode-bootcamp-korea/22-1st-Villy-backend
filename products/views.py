@@ -6,6 +6,7 @@ from django.db.models import Q
 
 from datetime       import datetime
 from .models        import Product, Efficacy, ProductEfficacy, ProductSummary
+from carts.models   import Cart
 
 class ProductsView(View):
     def get(self, request):
@@ -24,7 +25,8 @@ class ProductsView(View):
                             "productTablet"      : product.tablet,
                             "thumbnail_image_url": product.thumbnail_image_url,
                             "icon_image_url"     : [product_icon.icon_url for product_icon in product.efficacy.all()],
-                            "summary"            : [text.summary for text in product.productsummary_set.all()]
+                            "summary"            : [text.summary for text in product.productsummary_set.all()],
+                            "cart_exist"         : Cart.objects.filter(product_id=product.id).exists(),
                             }for product in products]
             return JsonResponse({"message":results},status=200)
 
@@ -38,7 +40,10 @@ class ProductsDetailsView(View):
     def get(self, request, product_id):
         try:
             product = Product.objects.get(id=product_id)
+            cart_exist = Cart.objects.filter(product_id=product.id)
+            
             results = [{
+                    "productID"          : product.id,
                     "productName"        : product.name,
                     "productPrice"       : product.price,
                     "productTablet"      : product.tablet,
@@ -46,6 +51,7 @@ class ProductsDetailsView(View):
                     "productDescription" : product.description,
                     "icon_image_url"     : [product_icon.icon_url for product_icon in product.efficacy.all()],
                     "icon_name"          : [product_icon.summary for product_icon in product.productsummary_set.all()],
+                    "cart_exist"         : cart_exist.exists(),
                 }
             ]
             return JsonResponse({"message":results},status=200)

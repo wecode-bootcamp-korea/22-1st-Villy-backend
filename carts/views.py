@@ -88,7 +88,7 @@ class CartView(View):
                 q_object &= Q(product_id__in= item)
             
             Cart.objects.filter(q_object).delete()
-
+            
             return JsonResponse({"message":"DELETE_COMPLETED"},status=204)
         except KeyError: 
             return JsonResponse({"message":"KEY_ERROR"},status=400)
