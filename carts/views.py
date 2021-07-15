@@ -1,7 +1,7 @@
 import json
 import bcrypt
 import jwt
-from datetime          import datetime
+from datetime import datetime
 
 from django.http            import JsonResponse
 from django.views           import View
@@ -44,7 +44,6 @@ class CartView(View):
         try: 
             user  = request.user
             carts = Cart.objects.filter(user_id=user.id)
-
             results = [{
                 "productID"        : cart.product.id,
                 "productName"        : cart.product.name,
@@ -68,8 +67,7 @@ class CartView(View):
         try: 
             data = json.loads(request.body)
             user = request.user
-            cart = Cart.objects.get(product_id=data["productID"], user=user)
-            cart.update(quantity = data["quantity"])
+            Cart.objects.filter(product_id=data["productID"], user=user).update(quantity = data["quantity"])
             return JsonResponse({"message":"UPDATE_COMPLETED"},status=200) 
             
         except ObjectDoesNotExist:
@@ -81,9 +79,8 @@ class CartView(View):
         except TypeError:
             return JsonResponse({"message":"TYPE_ERROR"},status=400)
 
-class CartDeleteView(View):
     @check_login
-    def delete(self, request, product_id):
+    def delete(self, request):
         try: 
             item = request.GET.getlist('item',None)
             q_object = Q()
@@ -91,31 +88,12 @@ class CartDeleteView(View):
                 q_object &= Q(product_id__in= item)
             
             Cart.objects.filter(q_object).delete()
-
+            
             return JsonResponse({"message":"DELETE_COMPLETED"},status=204)
         except KeyError: 
             return JsonResponse({"message":"KEY_ERROR"},status=400)
         except ObjectDoesNotExist:
             return JsonResponse({'message' : 'MODEL_ERROR'}, status=400)
-        except TypeError:
-            return JsonResponse({"message":"TYPE_ERROR"},status=400)
-        except ValueError:
-            return JsonResponse({"message":"VALUE_ERROR"},status=400)
-
-
-class CartDeleteView(View):
-    @check_login
-    def delete(self, request, product_id):
-        try: 
-            user = request.user
-            cart = Cart.objects.get(product_id=product_id, user=user)
-            cart.delete()
-            return JsonResponse({"message":"DELETE_COMPLETED"},status=204) 
-
-        except ObjectDoesNotExist:
-            return JsonResponse({'message' : 'MODEL_ERROR'}, status=400)
-        except KeyError: 
-            return JsonResponse({"message":"KEY_ERROR"},status=400)
         except TypeError:
             return JsonResponse({"message":"TYPE_ERROR"},status=400)
         except ValueError:
